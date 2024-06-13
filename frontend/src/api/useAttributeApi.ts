@@ -11,6 +11,6 @@ const getAttribute = async (id: string): Promise<AttributeQueryResult> => {
 export const useAttributeApi = (id: string) => {
   return useQuery<AttributeQueryResult, Error>({
     queryFn: async () => getAttribute(id),
-    queryKey: [["Attribute"], { id }],
+    queryKey: ["Attribute", { id }],
   });
 };

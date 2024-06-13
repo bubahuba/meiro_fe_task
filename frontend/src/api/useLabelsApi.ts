@@ -19,6 +19,6 @@ export const useLabelsApi = (params: LabelsQueryParams) => {
         : undefined,
     queryFn: async ({ pageParam }) =>
       getLabels({ ...params, offset: pageParam as number }),
-    queryKey: [["Labels"], { ...params }],
+    queryKey: ["Labels", params ],
   });
 };

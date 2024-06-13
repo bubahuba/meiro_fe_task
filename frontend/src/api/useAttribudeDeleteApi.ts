@@ -16,16 +16,14 @@ export const useAttributeDeleteApi = () => {
 
   return useMutation<AttributesQueryResult, Error, DeleteAttributeQueryParams>({
     mutationFn: (params) => deleteAttribute(params.id),
-    // When mutate is called:
     onMutate: async ({ params }) => {
       await queryClient.cancelQueries({
-        queryKey: ["Attributes", { ...params }],
+        queryKey: ["Attributes", params ],
       });
     },
+    onSettled: (_data, _error, params ) => {
 
-    onSettled: (_data, _error, { params }) => {
-
-      return queryClient.invalidateQueries({ queryKey: ["Attributes", { ...params }] });
+      return queryClient.invalidateQueries({ queryKey: ["Attributes", params ] });
     },
   });
 };

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { Helmet } from "react-helmet";
 
@@ -194,12 +194,12 @@ export const Attributes = () => {
     },
   ];
 
-  const allLabels = useCallback(() => {
+  const allLabels = useMemo(() => {
     if (!labelsApi.data) return;
     setLoadedLabels(labelsApi.data.pages.flatMap((page) => page.data));
   }, [labelsApi.data]);
 
-  const loadedRows = useCallback(() => {
+  const loadedRows = useMemo(() => {
     let updatedData: Attribute[] = [];
 
     attributesApi.data?.pages.forEach((page) => {
@@ -249,7 +249,7 @@ export const Attributes = () => {
         deleteAttribute(itemToDelete);
         setItemToDelete(null);
         setSnackBarOpen(
-          loadedRows().find((row) => row.id === itemToDelete)?.name
+          loadedRows.find((row) => row.id === itemToDelete)?.name
         );
 
         break;
@@ -291,7 +291,7 @@ export const Attributes = () => {
 
   useEffect(() => {
     if (!labelsApi.data) return;
-    allLabels();
+    allLabels;
   }, [allLabels, labelsApi.data]);
 
   useEffect(() => {
@@ -305,6 +305,12 @@ export const Attributes = () => {
     if (location.state) {
       setSearchText(location.state.attributesQueryParams.searchText);
       setAttributesQueryParams(location.state.attributesQueryParams);
+      setGridSortModel([
+        {
+          field: location.state.attributesQueryParams.sortBy,
+          sort: location.state.attributesQueryParams.sortDir,
+        },
+      ]);
     }
   }, [location.state]);
 
@@ -328,7 +334,7 @@ export const Attributes = () => {
           hideFooter
           columns={columns}
           disableColumnMenu
-          rows={loadedRows()}
+          rows={loadedRows}
           apiRef={gridApiRef}
           sortingMode="server"
           autosizeOptions={{

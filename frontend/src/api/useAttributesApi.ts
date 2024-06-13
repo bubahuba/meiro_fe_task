@@ -19,6 +19,6 @@ export const useAttributesApi = (params: AttributesQueryParams) => {
         : undefined,
     queryFn: async ({ pageParam }) =>
       getAttributes({ ...params, offset: pageParam as number }),
-    queryKey: [["Attributes"], { ...params }],
+    queryKey: ["Attributes", params ],
   });
 };

@@ -1,6 +1,6 @@
 import { Alert, Button, Chip, Snackbar, Typography } from "@mui/material";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Label,
   LabelsQueryParams,
@@ -36,7 +36,7 @@ export const AttributeDetail = () => {
 
   const attributeDeleteApi = useAttributeDeleteApi();
 
-  const allLabels = useCallback(() => {
+  const allLabels = useMemo(() => {
     if (!labelsApi.data) return;
     setLoadedLabels(labelsApi.data.pages.flatMap((page) => page.data));
   }, [labelsApi.data]);
@@ -81,10 +81,10 @@ export const AttributeDetail = () => {
   useEffect(() => {
     const goBack = () => {
       window.removeEventListener("popstate", goBack);
-      navigate("/attributes", { state: location.state, replace: true });
+      navigate("/attributes", { state: location.state });
     };
-    window.onpopstate = () => goBack;
-  });
+    window.onpopstate = goBack;
+  }, [location.state, navigate]);
 
   const showLabels = () => {
     const attributeLabels: (string | undefined)[] = [];
@@ -117,7 +117,7 @@ export const AttributeDetail = () => {
 
   useEffect(() => {
     if (!labelsApi.data) return;
-    allLabels();
+    allLabels;
   }, [allLabels, labelsApi.data]);
 
   return (
@@ -127,7 +127,7 @@ export const AttributeDetail = () => {
           <title>{attributeApi.data?.data.name} | Meiro Frontend task</title>
         </Helmet>
       )}
-      <Link to="/attributes" state={location.state} replace={true}>
+      <Link to="/attributes" state={location.state}>
         <Typography variant="h2">Attributes</Typography>
       </Link>
       <Typography variant="h1" sx={{ marginBottom: 2 }}>
